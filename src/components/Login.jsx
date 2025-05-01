@@ -29,15 +29,15 @@ const Login = () => {
                
             }, { withCredentials: true });
             if(res.status !== 200){
-                setError(res.data.message);
+                setError(res?.data?.message ? res?.data?.message : "Something went wrong");
                 return;
             }
             setError(false);
-            dispatch( setUser(res.data.user));
-            navigate("/");            
+            dispatch( setUser(res?.data?.user));
+            return navigate("/");            
             
         }catch(err){            
-            setError(err.response.data.message);            
+            setError(err?.response?.data?.message ? err?.response?.data?.message : "Something went wrong");            
         }
     }
 
