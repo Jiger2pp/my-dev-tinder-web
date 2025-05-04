@@ -1,0 +1,70 @@
+import axios from "axios";
+import { useState } from "react";
+import { BASE_URL } from "../utils/constants";
+import { useDispatch } from "react-redux";
+import { removeReceivedRequest } from "../features/user/received/requests";
+
+const ReceivedRequestItem = ({receivedRequestItem, loggedInUser}) => {
+    
+    console.log(receivedRequestItem);
+    const dispatch = useDispatch();
+    const {toUserId, fromUserId, _id} = receivedRequestItem;
+    
+    const {firstName, lastName} = toUserId._id === loggedInUser._id ? fromUserId : toUserId;
+    const [message, setMessage] = useState(false);
+
+    const handleReviewRequest = async (status) => {
+        setMessage(false);
+        try{
+
+            const res = await axios.post(BASE_URL + "request/review/" + status + "/"+_id, {}, { withCredentials: true});
+            
+            setMessage(res?.data?.message);
+            dispatch(removeReceivedRequest(_id));
+            //console.log(res.data.status);
+            setTimeout(function(){
+                setMessage(false);
+            }, 2000);
+
+        }catch(err){
+            if(err?.response?.status !== 200 ){
+                setMessage(err?.response?.data?.message);
+                setTimeout(function(){
+                    setMessage(false);
+                }, 2000);
+            }
+            console.log(err);
+            
+        }
+    }
+
+    return(
+        <div className="card card-side bg-base-200 shadow-sm border-0 my-5">
+        { message && <div className="toast toast-top toast-center">            
+            <div className="alert alert-success">
+                <span>{message}</span>
+            </div>
+        </div>
+        }
+        <div className="flex width-auto">
+            <img
+                src="https://png.pngtree.com/png-vector/20191101/ourmid/pngtree-cartoon-color-simple-male-avatar-png-image_1934459.jpg"
+                alt="My Connections" className="w-40 rounded-full" />
+        </div>
+        <div className="card-body">
+            <h2 className="card-title">{firstName + " " + lastName}</h2>
+            <p>Click the button to watch on Jetflix app.</p>
+            <div className="card-actions justify-end">
+            {
+                fromUserId?._id !== loggedInUser?._id ? (<><button className="btn btn-primary" onClick={ () => handleReviewRequest("accepted") }>Accept</button>
+                    <button className="btn btn-error" onClick={ () => handleReviewRequest("rejected") } >Reject</button></>)
+                : (<button className="btn btn-primary">Pending</button>)
+            }
+                
+            </div>
+        </div>
+    </div>
+    );
+}
+
+export default ReceivedRequestItem;

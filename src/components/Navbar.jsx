@@ -4,6 +4,8 @@ import axios from "axios";
 import { setUser } from "../features/user/userSlice";
 import { Link, useNavigate } from "react-router-dom";
 import { setFeed } from "../features/user/feed/feedSlice";
+import { setReceivedRequests } from "../features/user/received/requests";
+import { setConnections } from "../features/user/connections";
 
 const Navbar = () => { 
 
@@ -17,6 +19,8 @@ const Navbar = () => {
             await axios.post(BASE_URL+"logout", {}, { withCredentials: true });
             dispatch(setUser(null));
             dispatch(setFeed(null));
+            dispatch(setReceivedRequests(null));
+            dispatch(setConnections(null));
             return navigate("/login");
             
         }catch(err){
@@ -49,7 +53,13 @@ const Navbar = () => {
                         className="menu menu-sm dropdown-content bg-base-100 rounded-box z-1 mt-3 w-52 p-2 shadow">
                         <li>
                             <Link to="/profile" className="justify-between">Profile <span className="badge">New</span></Link>                        
-                        </li>                       
+                        </li> 
+                        <li>
+                            <Link to="/connection" className="justify-between">Connections</Link>                        
+                        </li> 
+                        <li>
+                            <Link to="/my-connection-requests" className="justify-between">My Connection Requests</Link>                        
+                        </li>                      
                         <li onClick={handleLogout}><a>Logout</a></li>
                     </ul>
                     </div>

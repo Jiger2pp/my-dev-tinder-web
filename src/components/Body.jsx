@@ -15,19 +15,16 @@ const Body = () => {
 
     const fetchUserprofile = async () => {
         try{
-            if(user){
-                console.log("User already present");
+            if(user){                
                 return;
             }
-            const res = await axios.post(BASE_URL+"profile/view",{}, { withCredentials: true});
-            //console.log(res);
+            const res = await axios.post(BASE_URL+"profile/view",{}, { withCredentials: true });           
             dispatch(setUser(res?.data?.user))
 
         } catch(err){
             if(err?.response?.status === 401){
                 return navigate("/login");
-            }
-            console.log(err);
+            }            
         }
 
     }

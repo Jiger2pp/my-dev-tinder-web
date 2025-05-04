@@ -22,7 +22,7 @@ const Login = () => {
             if(!emailId || !password){
                 setError("Either email or password is empty");
                 return;
-            }
+            }           
             const res = await axios.post(BASE_URL + "login", {
                 email: emailId,
                 password: password
