@@ -19,14 +19,12 @@ const ReceivedRequests = () => {
 
             }
             const res = await axios.get(BASE_URL+"user/request/received", { withCredentials: true });            
-            dispatch(setReceivedRequests(res?.data?.connections));
-            console.log(res?.data?.connections);
+            dispatch(setReceivedRequests(res?.data?.connections));            
 
 
         }catch(err){
             if(err?.response?.status === 404){
-                setMessage(err?.response?.data?.message);
-                console.log(err);
+                setMessage(err?.response?.data?.message);                
             }
             
         }
@@ -37,9 +35,8 @@ const ReceivedRequests = () => {
     }, []);
 
     return(
-        <div className="flex flex-col items-center justify-center">
-            <h1 className="my-10 text-2xl">My Connection Requests</h1>
-            { message && <p>{message}</p>}
+        <div className="flex flex-col items-center justify-center">            
+            { message && <h1>{message}</h1>}
            {receivedRequests && receivedRequests.map((receivedRequest) => {
                 return(
                     <ReceivedRequestItem key={receivedRequest._id} receivedRequestItem={receivedRequest} loggedInUser={loggedInUser}/>

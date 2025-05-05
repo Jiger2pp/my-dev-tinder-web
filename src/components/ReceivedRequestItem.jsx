@@ -4,9 +4,8 @@ import { BASE_URL } from "../utils/constants";
 import { useDispatch } from "react-redux";
 import { removeReceivedRequest } from "../features/user/received/requests";
 
-const ReceivedRequestItem = ({receivedRequestItem, loggedInUser}) => {
+const ReceivedRequestItem = ({receivedRequestItem, loggedInUser}) => {    
     
-    console.log(receivedRequestItem);
     const dispatch = useDispatch();
     const {toUserId, fromUserId, _id} = receivedRequestItem;
     
@@ -20,8 +19,7 @@ const ReceivedRequestItem = ({receivedRequestItem, loggedInUser}) => {
             const res = await axios.post(BASE_URL + "request/review/" + status + "/"+_id, {}, { withCredentials: true});
             
             setMessage(res?.data?.message);
-            dispatch(removeReceivedRequest(_id));
-            //console.log(res.data.status);
+            dispatch(removeReceivedRequest(_id));            
             setTimeout(function(){
                 setMessage(false);
             }, 2000);
@@ -32,8 +30,7 @@ const ReceivedRequestItem = ({receivedRequestItem, loggedInUser}) => {
                 setTimeout(function(){
                     setMessage(false);
                 }, 2000);
-            }
-            console.log(err);
+            }           
             
         }
     }

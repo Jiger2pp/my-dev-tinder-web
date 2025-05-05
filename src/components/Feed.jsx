@@ -1,29 +1,31 @@
 import axios from "axios";
 import { BASE_URL } from "../utils/constants";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { setFeed } from "../features/user/feed/feedSlice";
 import FeedCard from "./FeedCard";
+import { useNavigate } from "react-router-dom";
 
 const Feed = () => { 
 
     const dispatch = useDispatch();
-    const [message, setMessage] = useState(false);
+    const navigate = useNavigate()   
     const feeds = useSelector((state) => state.feed);    
 
-    const fetchFeed = async () => {
-        setMessage(false);
+    const fetchFeed = async () => {        
         try{
-            if(feeds){
+            if(feeds !== null && feeds.length !== 0){
                 return;
             }
-            const res = await axios.get(BASE_URL + "user/feed?page=1&limit=1", { withCredentials: true});            
+            const res = await axios.get(BASE_URL + "user/feed?page=1&limit=5", { withCredentials: true});            
             dispatch(setFeed(res?.data?.data));
 
         }catch(err){
-            if(err?.response?.status === 404){
-                setMessage(err?.response?.data?.message);
+            if(err?.response?.status === 404){                
                 console.log(err);
+            }else if(err?.response?.status === 401){
+                navigate("/login");
+                
             }
         }
 
@@ -35,9 +37,9 @@ const Feed = () => {
     }, []);
 
     return(
-        <> <div className="flex flex-col items-center justify-center">            
-            { message && <p>{message}</p>}
-            { feeds !== null && feeds.map((feed) => { return (<FeedCard key={feed._id} user={feed}/>) })  }
+        <> <div className="flex flex-col items-center justify-center"> 
+           { feeds === null && <h1 className="my-10 text-2xl">No user feeds found.</h1> }           
+            { feeds !== null && feeds.length !== 0 && <FeedCard user={feeds[0]} /> }
            </div>
         </>
     );

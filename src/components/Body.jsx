@@ -22,7 +22,7 @@ const Body = () => {
             dispatch(setUser(res?.data?.user))
 
         } catch(err){
-            if(err?.response?.status === 401){
+            if(err?.response?.status === 401){                
                 return navigate("/login");
             }            
         }

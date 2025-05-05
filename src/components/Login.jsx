@@ -60,7 +60,7 @@ const Login = () => {
                         </label>
                         <label className="label flex flex-col items-start">
                             <span>Password</span>
-                            <input type="text" value={password} onChange={(e) => setPassword(e.target.value)} className="input input-md border-none" />
+                            <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} className="input input-md border-none" />
                         </label>                       
                         <div className="card-actions justify-center">
                             <button className="btn btn-primary" onClick={ handleLogin }>Login</button>

@@ -17,8 +17,7 @@ const Profile = () => {
                 return;
             }
             
-            const res = await axios.post(BASE_URL+"profile/view",{}, { withCredentials: true});
-            //console.log(res?.data?.user);
+            const res = await axios.post(BASE_URL+"profile/view",{}, { withCredentials: true});            
             dispatch(setUser(res?.data?.user))
 
         } catch(err){

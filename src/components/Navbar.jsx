@@ -23,8 +23,8 @@ const Navbar = () => {
             dispatch(setConnections(null));
             return navigate("/login");
             
-        }catch(err){
-            console.log(err);
+        }catch(err){            
+            
         }
     }
     //console.log("navbar", user);

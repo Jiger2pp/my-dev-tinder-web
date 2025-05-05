@@ -1,19 +1,26 @@
 import axios from "axios";
 import { BASE_URL } from "../utils/constants";
 import { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { removeFeed, setFeed } from "../features/user/feed/feedSlice";
 
 const FeedCard = ({user}) => {
-    const { _id, firstName, lastName, age, skills, gender, phone, about } = user;
+    const { _id, firstName, lastName, age, skills, gender, phone, about } = user;   
     const [message, setMessage] = useState(false);
+    const feeds = useSelector(state => state.feed);
+    const dispatch  = useDispatch()
     const handleSendRequest = async (status) => {
         setMessage(false);
         try{
 
             const res = await axios.post(BASE_URL + "request/send/" + status + "/"+_id, {}, { withCredentials: true});
             
-            setMessage(res?.data?.message);
-            //dispatch(setReceivedRequests(res?.data?.data));
-            console.log(res.data.status);
+            setMessage(res?.data?.message);           
+            if(feeds.length === 1){                 
+                dispatch(setFeed(null));
+            }else{                
+                dispatch(removeFeed(_id));
+            }            
             setTimeout(function(){
                 setMessage(false);
             }, 2000);
@@ -24,13 +31,12 @@ const FeedCard = ({user}) => {
                 setTimeout(function(){
                     setMessage(false);
                 }, 2000);
-            }
-            console.log(err);
+            }            
             
         }
     }
     return (
-            <div className="flex flex-col items-center justify-center my-10">
+           user != null &&  <div className="flex flex-col items-center justify-center my-10">
                 { message && <div className="toast toast-top toast-center">            
                     <div className="alert alert-success">
                         <span>{message}</span>
@@ -47,10 +53,10 @@ const FeedCard = ({user}) => {
                     <div className="card-body items-center text-center">
                         <h2 className="card-title">{age ? age : "Age not added"}, { firstName + " " + lastName}</h2>
                         <p>A card component has a figure, a body part, and inside body there are title and actions parts</p>
-                        <div className="card-actions">
+                        { typeof _id !=="undefined" && (<div className="card-actions">
                         <button className="btn btn-primary" onClick={ () => handleSendRequest("ignore")}>Ignore</button>
-                        <button className="btn btn-secondary" onClick={ () => handleSendRequest("interested")}>Interested</button>
-                        </div>
+                        <button className="btn btn-secondary" onClick={ () => handleSendRequest("interested")}>Interested</button> 
+                        </div>)}
                     </div>
                 </div>
             </div>

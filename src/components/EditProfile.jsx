@@ -35,13 +35,11 @@ const EditProfile = ({user}) => {
             setMessage(res?.data?.message);
             const time = setTimeout(() => {
                 setMessage(false);
-            }, 2000);
-            //console.log(res?.data?.user);
+            }, 2000);            
 
         }catch(err){
             setMessage(err);
-            clearTimeout(time);
-            console.log(err);
+            clearTimeout(time);            
         }
     }
   

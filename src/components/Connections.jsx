@@ -22,8 +22,7 @@ const Connections  = () => {
 
         }catch(err){
             if(err?.response?.status === 404){
-                setMessage(err?.response?.data?.message);
-                console.log(err);
+                setMessage(err?.response?.data?.message);                
             }
         }
 
@@ -34,9 +33,8 @@ const Connections  = () => {
 
     return (
         
-        <div className="flex flex-col items-center justify-center">
-            <h1 className="my-10 text-2xl">Connections</h1>
-            { message && <p>{message}</p>}  
+        <div className="flex flex-col items-center justify-center">           
+            { message && <h1>{message}</h1>}  
             {connections && connections.map( (connection) => {
                 return (
                     <ConnectionItem key={connection._id} connection={connection} />
