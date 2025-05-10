@@ -15,9 +15,7 @@ const socketConnect = () => {
             auth: {
                 serverOffset: 0
             },
-            path: {
-                "/api/socket.io/"
-            }
+            path: "/api/socket.io/"
         });
     }
     
