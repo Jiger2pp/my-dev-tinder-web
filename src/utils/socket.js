@@ -11,7 +11,7 @@ const socketConnect = () => {
         });
 
     }else{
-        return io(BASE_URL,{
+        return io("/",{
             auth: {
                 serverOffset: 0
             },
