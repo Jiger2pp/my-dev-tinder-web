@@ -1,12 +1,15 @@
 import axios from "axios";
 import { BASE_URL } from "../utils/constants";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 const ConnectionItem  = ({connection}) => {
     const {firstName, lastName, _id} = connection;
     const [message, setMessage] = useState(false);
-    const handleNavigateToProfile = () => {
+    const navigate = useNavigate();
+    const handleNavigateToChatWindow = () => {
         
+        return navigate("/chat/"+_id);
         
     }
     
@@ -28,7 +31,7 @@ const ConnectionItem  = ({connection}) => {
                         <h2 className="card-title">{firstName + " " + lastName}</h2>
                         <p>Click the button to watch on Jetflix app.</p>
                         <div className="card-actions justify-end">
-                            <button className="btn btn-primary" onClick={ handleNavigateToProfile }>Chat Now</button>
+                            <button className="btn btn-primary" onClick={ handleNavigateToChatWindow }>Chat Now</button>
                             
                         </div>
                     </div>

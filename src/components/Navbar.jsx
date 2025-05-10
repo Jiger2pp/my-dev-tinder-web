@@ -6,6 +6,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { setFeed } from "../features/user/feed/feedSlice";
 import { setReceivedRequests } from "../features/user/received/requests";
 import { setConnections } from "../features/user/connections";
+import socketConnect from "../utils/socket";
 
 const Navbar = () => { 
 
@@ -21,6 +22,8 @@ const Navbar = () => {
             dispatch(setFeed(null));
             dispatch(setReceivedRequests(null));
             dispatch(setConnections(null));
+            const socket = socketConnect();
+            socket.disconnect();
             return navigate("/login");
             
         }catch(err){            
@@ -56,7 +59,7 @@ const Navbar = () => {
                         </li> 
                         <li>
                             <Link to="/connection" className="justify-between">Connections</Link>                        
-                        </li> 
+                        </li>                        
                         <li>
                             <Link to="/my-connection-requests" className="justify-between">My Connection Requests</Link>                        
                         </li>                      

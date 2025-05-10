@@ -7,6 +7,7 @@ import store from "./store/appStore";
 import Feed from "./components/Feed";
 import Connections from "./components/Connections";
 import ReceivedRequests from "./components/ReceivedRequests";
+import Chat from "./components/Chat";
 
 
 function App() {  
@@ -21,7 +22,8 @@ function App() {
             <Route path="/login" element={<Login />} />
             <Route path="/profile" element={<Profile />} />
             <Route path="/connection" element={<Connections />} />
-            <Route path="/my-connection-requests" element={<ReceivedRequests />} />            
+            <Route path="/my-connection-requests" element={<ReceivedRequests />} /> 
+            <Route path="/chat/:targetId" element={<Chat/>} />           
           </Route>
         </Routes>
       </BrowserRouter>
