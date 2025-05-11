@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
 import { useSelector } from "react-redux";
 import socketConnect from "../utils/socket";
@@ -12,7 +12,8 @@ const Chat = () => {
     const [messages, setMessages] = useState([]);
     const [isConnected, setIsConnected] = useState(false);
     const [otherParticipant, setOtherParticipant] = useState([]);
-    const user = useSelector((state) => state.user);    
+    const user = useSelector((state) => state.user);
+    const chatBoxRef = useRef(null);    
     const userId = user?._id;
     const firstName = user?.firstName;   
     const lastName = user?.lastName; 
@@ -40,6 +41,13 @@ const Chat = () => {
     useEffect(() => {              
         fetchUserChat();
     }, []);
+
+    useEffect(() => {
+        const chatBoxContainer = chatBoxRef.current;        
+        if(chatBoxContainer){
+            chatBoxContainer.scrollTop = chatBoxContainer.scrollHeight;
+        }
+    }, [messages]);
     
     useEffect(() => {
         if(!userId){            
@@ -77,30 +85,15 @@ const Chat = () => {
         
         setMessages((messages) => [...messages, {fromUserId,firstName, lastName, text}]);            
         setMessage("");
-        socket.auth.serverOffset = serverOffset;
-        //scrollPageDown();    
+        socket.auth.serverOffset = serverOffset;            
                      
-    }  
-    
-    const scrollPageDown = () => {
-        const chatBox = document.querySelector(".chat-box"); 
-        const chatBoxEle = chatBox.children;
-        const totalEle = parseInt(chatBoxEle.length);
-        const chtBoxLastEle = totalEle> 0 ? chatBoxEle[totalEle - 1] : 0;           
-        const totalHeight = (parseInt(chatBox.scrollTop) + parseInt(chatBox.clientHeight));
-        //console.log("Total Height= "+totalHeight +"Scroll Top = "+parseInt(chatBox.scrollTop)+" scroll Height="+chatBox.scrollHeight+" scroll client = "+chatBox.clientHeight);
-        console.log(totalEle+" "+chtBoxLastEle.scrollHeight+" "+chatBox.scrollTop);
-        chatBox.scrollTop += chatBox.clientHeight; 
-        //console.log("Scroll Top = "+parseInt(chatBox.scrollTop)+" scroll Height="+chatBox.scrollHeight+" scroll client = "+chatBox.clientHeight);  
-        //window.scrollTo({top: parseInt(chatBox.scrollHeight), left:0, behaviour: 'smooth'}); 
-    }
-    
+    }    
 
     return (
         <div className="w-3/4 m-auto border border-orange-100">            
             <div className="inline-grid *:[grid-area:1/1] mx-2">{ isConnected ? <span className="status status-success"></span> : <span className="status status-neutral"></span>}</div><span className="text-xs">{`${firstName} ${lastName}`}</span>
             <div className="divider"></div>
-            <div className="chat-box h-100 w-full overflow-auto">
+            <div className="chat-box h-100 w-full overflow-auto" ref={chatBoxRef}>
                 {                   
                   
                   messages.map((textMessage, index) => {                        
