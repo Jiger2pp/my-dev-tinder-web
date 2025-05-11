@@ -4,6 +4,8 @@ import { useSelector } from "react-redux";
 import socketConnect from "../utils/socket";
 import axios from "axios";
 import { BASE_URL } from "../utils/constants";
+import TimeAgo from "react-timeago";
+
 
 const Chat = () => {
 
@@ -32,8 +34,9 @@ const Chat = () => {
         setMessages(userSavedMessages.map((userSavedMessage) => { 
             let {_id, firstName, lastName}=  userSavedMessage?.fromUserId;            
             let text =  userSavedMessage?.text;
-            let timestamps = userSavedMessage?.timestamps 
-            let row = { fromUserId:_id, firstName, lastName, text }
+            let timeAgo = userSavedMessage?.timestamps.createdAt;
+            let row = { fromUserId:_id, firstName, lastName, text , timeAgo}            
+            
             return row;
         }));        
         
@@ -83,7 +86,7 @@ const Chat = () => {
         
         setIsConnected(isConnected? true : false); 
         
-        setMessages((messages) => [...messages, {fromUserId,firstName, lastName, text}]);            
+        setMessages((messages) => [...messages, {fromUserId,firstName, lastName, text, timeAgo: Date.now()}]);            
         setMessage("");
         socket.auth.serverOffset = serverOffset;            
                      
@@ -100,10 +103,9 @@ const Chat = () => {
                         return (<div key={index} className={"chat " + `${textMessage.fromUserId !== userId ? 'chat-start' : 'chat-end'}`}>
                                     <div className="chat-header">
                                         {`${textMessage?.firstName} ${textMessage?.lastName}`}
-                                        <time className="text-xs opacity-50">2 hours ago</time>
+                                        <time className="text-xs opacity-50"><TimeAgo date={textMessage?.timeAgo} /></time>
                                     </div>
-                                    <div className="chat-bubble">{textMessage?.text}</div>
-                                    <div className="chat-footer opacity-50">Seen</div>
+                                    <div className="chat-bubble">{textMessage?.text}</div>                                    
                                 </div>)
                     })
                 }
