@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import FeedCard from "./FeedCard";
 import axios from "axios";
 import { BASE_URL } from "../utils/constants";
@@ -17,10 +17,33 @@ const EditProfile = ({user}) => {
     const [phone, setPhone] = useState(user?.phone === undefined ? "" : user?.phone);
     const [about, setAbout] = useState("Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur id eros arcu. Duis tristique lorem vel ultricies egestas. Nullam egestas sapien leo, at auctor purus rhoncus eget. Suspendisse potenti.");
     const [message, setMessage] = useState(false);
+    const [isError, setIsError] = useState(false);
+    const setTimeOutRef = useRef(null);
+    const phoneRef = useRef(null);
+    const ageRef = useRef(null);
     
     const handleSaveProfile = async () => {
         try{
             setMessage(false);
+            setIsError(false);            
+            if( age && ( parseInt(age) <= 0 || parseInt(age) >= 100 ) ){
+                ageRef.current.focus();
+                setMessage("Please enter valid age.");
+                setIsError(true);
+                setTimeOutRef.current = setTimeout(() => {
+                    setMessage(false);
+                }, 2000);
+                return; 
+            }
+            if(phone && phone.length > 10){
+                phoneRef.current.focus();
+                setMessage("Please enter valid phone number.");
+                setIsError(true);
+                setTimeOutRef.current = setTimeout(() => {
+                    setMessage(false);
+                }, 2000);
+                return;
+            }
             const skillArr = typeof skills === "string" ? skills.split(",") : skills ;                      
             const res = await axios.put(BASE_URL + "profile/edit", {
                 firstName,
@@ -33,20 +56,21 @@ const EditProfile = ({user}) => {
             }, { withCredentials: true});
             dispatch(setUser(res?.data?.user));
             setMessage(res?.data?.message);
-            const time = setTimeout(() => {
+            setTimeOutRef.current = setTimeout(() => {
                 setMessage(false);
             }, 2000);            
 
         }catch(err){
             setMessage(err);
-            clearTimeout(time);            
+            setIsError(true);
+            clearTimeout(setTimeOutRef.current);            
         }
     }
   
     return (
     <div className="flex flex-row justify-center align-items">
        { message && <div className="toast toast-top toast-center">            
-            <div className="alert alert-success">
+            <div className={!isError ? "alert alert-success" : "alert alert-error"}>
                 <span>{message}</span>
             </div>
         </div>
@@ -66,15 +90,19 @@ const EditProfile = ({user}) => {
                         </label>
                         <label className="label flex flex-col items-start">
                             <span>Age</span>
-                            <input type="text" value={age} onChange={(e) => setAge(e.target.value)} className="input input-md border-none" />
+                            <input type="text" max={'100'} value={age} onChange={(e) => setAge(e.target.value)} className="input input-md border-none"  ref={ageRef} />
                         </label> 
                         <label className="label flex flex-col items-start">
-                            <span>Gender</span>
-                            <input type="text" value={gender} onChange={(e) => setGender(e.target.value)} className="input input-md border-none" />
+                            <span>Gender</span>                          
+                            <select onChange={(e) => setGender(e.target.value)} value={gender} className="input select input-md border-none" >
+                                <option value="Male">Male</option>
+                                <option value="Female">Female</option>
+                                <option value="Other">Others</option>
+                            </select>
                         </label> 
                         <label className="label flex flex-col items-start">
                             <span>Phone</span>
-                            <input type="text" value={phone} onChange={(e) => setPhone(e.target.value)} className="input input-md border-none" />
+                            <input type="text" value={phone} onChange={(e) => setPhone(e.target.value)} className="input input-md border-none" ref={phoneRef} />
                         </label> 
                         <label className="label flex flex-col items-start">
                             <span>Skills</span>

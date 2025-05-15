@@ -27,10 +27,11 @@ const Chat = () => {
         
         let userSavedMessages = res?.data?.data?.messages;
         const participants = res?.data?.data?.participants;
+        //console.log(participants);
         if(!userSavedMessages){
             userSavedMessages = [];
         }       
-        setOtherParticipant(participants.filter((participant) => participant._id.toString() === targetId ));
+        setOtherParticipant(typeof participants !== "undefined" && participants.filter((participant) => participant._id.toString() === targetId ));
         setMessages(userSavedMessages.map((userSavedMessage) => { 
             let {_id, firstName, lastName}=  userSavedMessage?.fromUserId;            
             let text =  userSavedMessage?.text;

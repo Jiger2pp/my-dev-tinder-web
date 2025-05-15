@@ -38,7 +38,7 @@ const Feed = () => {
 
     return(
         <> <div className="flex flex-col items-center justify-center"> 
-           { feeds === null && <h1 className="my-10 text-2xl">No user feeds found.</h1> }           
+           { (feeds === null && (feeds !== null && feeds.length == 0) ) && <h1 className="my-10 text-2xl">No user feeds found.</h1> }           
             { feeds !== null && feeds.length !== 0 && <FeedCard user={feeds[0]} /> }
            </div>
         </>

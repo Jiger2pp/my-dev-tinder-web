@@ -8,8 +8,8 @@ import { setReceivedRequests } from "../features/user/received/requests";
 import { setConnections } from "../features/user/connections";
 import socketConnect from "../utils/socket";
 
-const Navbar = () => { 
-
+const Navbar = () => {
+        
     const user = useSelector((state) => state.user);
     const dispatch = useDispatch();
     const navigate = useNavigate();
