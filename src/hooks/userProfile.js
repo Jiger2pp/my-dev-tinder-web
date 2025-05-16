@@ -5,9 +5,8 @@ import { BASE_URL } from "../utils/constants";
 import { useEffect } from "react";
 import { setUser } from "../features/user/userSlice";
 
-export function useProfile(){
+export function useProfile(user){
 
-    const user = useSelector((state) => state.user);
     const dispatch = useDispatch();
     const navigate = useNavigate();
 

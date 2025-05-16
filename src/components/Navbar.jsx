@@ -1,5 +1,5 @@
 import { useDispatch, useSelector } from "react-redux";
-import { BASE_URL } from "../utils/constants";
+import { BASE_URL, UPLAOD_PIC_DIR } from "../utils/constants";
 import axios from "axios";
 import { setUser } from "../features/user/userSlice";
 import { Link, useNavigate } from "react-router-dom";
@@ -7,10 +7,12 @@ import { setFeed } from "../features/user/feed/feedSlice";
 import { setReceivedRequests } from "../features/user/received/requests";
 import { setConnections } from "../features/user/connections";
 import socketConnect from "../utils/socket";
+import { removePicture } from "../features/user/picture";
 
 const Navbar = () => {
         
     const user = useSelector((state) => state.user);
+    const userPictureUrl = useSelector((state) => state.pictureUrl);
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
@@ -22,6 +24,7 @@ const Navbar = () => {
             dispatch(setFeed(null));
             dispatch(setReceivedRequests(null));
             dispatch(setConnections(null));
+            dispatch(removePicture());
             const socket = socketConnect();
             socket.disconnect();
             return navigate("/login");
@@ -46,7 +49,7 @@ const Navbar = () => {
                                 <div className="w-10 rounded-full mr-2">
                                 <img
                                     alt="Tailwind CSS Navbar component"
-                                    src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp" />
+                                    src={!userPictureUrl ? "https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp" : BASE_URL + userPictureUrl} />
                                 </div>
                             </div>
                             </>

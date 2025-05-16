@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { removeFeed, setFeed } from "../features/user/feed/feedSlice";
 
 const FeedCard = ({user}) => {
-    const { _id, firstName, lastName, age, skills, gender, phone, about } = user;   
+    const { _id, firstName, lastName, age, skills, gender, phone, about, picture } = user;   
     const [message, setMessage] = useState(false);
     const feeds = useSelector(state => state.feed);
     const dispatch  = useDispatch()
@@ -46,7 +46,7 @@ const FeedCard = ({user}) => {
                 <div className="card bg-base-100 w-96 shadow-sm">
                     <figure className="px-10 pt-10">
                         <img
-                        src="https://png.pngtree.com/png-vector/20191101/ourmid/pngtree-cartoon-color-simple-male-avatar-png-image_1934459.jpg"
+                        src={!picture ? "https://png.pngtree.com/png-vector/20191101/ourmid/pngtree-cartoon-color-simple-male-avatar-png-image_1934459.jpg" : BASE_URL + picture}
                         alt="Avatar"
                         className="rounded-xl" />
                     </figure>
