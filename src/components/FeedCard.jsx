@@ -5,7 +5,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { removeFeed, setFeed } from "../features/user/feed/feedSlice";
 
 const FeedCard = ({user}) => {
-    const { _id, firstName, lastName, age, skills, gender, phone, about, picture } = user;   
+       
+    const { _id, firstName, lastName, age, skills, gender, phone, about, pictureUrl } = user;   
     const [message, setMessage] = useState(false);
     const feeds = useSelector(state => state.feed);
     const dispatch  = useDispatch()
@@ -43,16 +44,16 @@ const FeedCard = ({user}) => {
                     </div>
                 </div>
                 }
-                <div className="card bg-base-100 w-96 shadow-sm">
-                    <figure className="px-10 pt-10">
+                <div className="card bg-base-100 w-98 shadow-sm">
+                   <figure className="px-10 pt-10">
                         <img
-                        src={!picture ? "https://png.pngtree.com/png-vector/20191101/ourmid/pngtree-cartoon-color-simple-male-avatar-png-image_1934459.jpg" : BASE_URL + picture}
+                        src={!pictureUrl ? "https://png.pngtree.com/png-vector/20191101/ourmid/pngtree-cartoon-color-simple-male-avatar-png-image_1934459.jpg" : BASE_URL + pictureUrl}
                         alt="Avatar"
                         className="rounded-xl" />
                     </figure>
                     <div className="card-body items-center text-center">
-                        <h2 className="card-title">{age ? age : "Age not added"}, { firstName + " " + lastName}</h2>
-                        <p>A card component has a figure, a body part, and inside body there are title and actions parts</p>
+                        <h2 className="card-title">{gender? gender : "Not Avaiable"}, {age ? age : "Age not added"}, { firstName + " " + lastName}</h2>                        
+                        <div className="w-98"><p>{about ? about : "A card component has a figure, a body part, and inside body there are title and actions parts"}</p></div>
                         { typeof _id !=="undefined" && (<div className="card-actions">
                         <button className="btn btn-primary" onClick={ () => handleSendRequest("ignore")}>Ignore</button>
                         <button className="btn btn-secondary" onClick={ () => handleSendRequest("interested")}>Interested</button> 

@@ -9,7 +9,7 @@ const ReceivedRequestItem = ({receivedRequestItem, loggedInUser}) => {
     const dispatch = useDispatch();
     const {toUserId, fromUserId, _id} = receivedRequestItem;
     
-    const {firstName, lastName} = toUserId._id === loggedInUser._id ? fromUserId : toUserId;
+    const {firstName, lastName, about, pictureUrl} = toUserId._id === loggedInUser._id ? fromUserId : toUserId;
     const [message, setMessage] = useState(false);
 
     const handleReviewRequest = async (status) => {
@@ -45,12 +45,12 @@ const ReceivedRequestItem = ({receivedRequestItem, loggedInUser}) => {
         }
         <div className="flex width-auto">
             <img
-                src="https://png.pngtree.com/png-vector/20191101/ourmid/pngtree-cartoon-color-simple-male-avatar-png-image_1934459.jpg"
+                src={pictureUrl ? BASE_URL + pictureUrl : "https://png.pngtree.com/png-vector/20191101/ourmid/pngtree-cartoon-color-simple-male-avatar-png-image_1934459.jpg"}
                 alt="My Connections" className="w-40 rounded-full" />
         </div>
         <div className="card-body">
             <h2 className="card-title">{firstName + " " + lastName}</h2>
-            <p>Click the button to watch on Jetflix app.</p>
+            <div className="w-98"><p>{about ? about : "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur id eros arcu. Duis tristique lorem vel ultricies egestas. Nullam egestas sapien leo, at auctor purus rhoncus eget. Suspendisse potenti."}</p></div>
             <div className="card-actions justify-end">
             {
                 fromUserId?._id !== loggedInUser?._id ? (<><button className="btn btn-primary" onClick={ () => handleReviewRequest("accepted") }>Accept</button>

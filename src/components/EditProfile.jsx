@@ -17,13 +17,14 @@ const EditProfile = ({user}) => {
     const [skills, setSkills] = useState(user?.skills);
     const [gender, setGender] = useState(user?.gender === undefined ? "" : user?.gender);
     const [phone, setPhone] = useState(user?.phone === undefined ? "" : user?.phone);
-    const [about, setAbout] = useState("Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur id eros arcu. Duis tristique lorem vel ultricies egestas. Nullam egestas sapien leo, at auctor purus rhoncus eget. Suspendisse potenti.");
-    const [message, setMessage] = useState(false);
-    const [isError, setIsError] = useState(false);     
-    const [imagePreview, setImagePreview] = useState("");   
+    const [about, setAbout] = useState(user?.about === undefined ? "" : user?.about);
+    const [message, setMessage] = useState(false); 
+    const [previewPicture, setPreviewPicture] = useState(false);    
+    const [isError, setIsError] = useState(false);       
     const setTimeOutRef = useRef(null);
     const phoneRef = useRef(null);
     const ageRef = useRef(null);
+    
     
     const handleSaveProfile = async () => {
         try{
@@ -72,28 +73,41 @@ const EditProfile = ({user}) => {
 
     const handleUserPicture = async (e) => {
 
+        setMessage(false);
+        setIsError(false); 
         const validFileTypes = ["image/png", "image/jpeg", "image/jpg", "image/gif"];
-        if(typeof e.target.files === "undefined"){
-            console.log("Please upload an image.");
+        if(typeof e.target.files === "undefined"){            
+            setMessage("Please upload an image.");
+            setIsError(true);
+            setTimeOutRef.current = setTimeout(() => {
+                setMessage(false);
+            }, 2000);
             return ;
-        }else if(typeof e.target.files !== "undefined" && e.target.files.length === 0){
-            console.log("Please upload an image.");
+        }else if(typeof e.target.files !== "undefined" && e.target.files.length === 0){            
+            setMessage("Please upload an image.");
+            setIsError(true);
+            setTimeOutRef.current = setTimeout(() => {
+                setMessage(false);
+            }, 2000);
             return ;
-        }else if(typeof e.target.files !== "undefined" && ( e.target.files[0].size === 0 || !validFileTypes.includes(e.target.files[0].type))){
-            console.log("Please upload a valid image.");
+        }else if(typeof e.target.files !== "undefined" && ( e.target.files[0].size === 0 || !validFileTypes.includes(e.target.files[0].type))){            
+            setMessage("Please upload a valid image.");
+            setIsError(true);
+            setTimeOutRef.current = setTimeout(() => {
+                setMessage(false);
+            }, 2000);
             return ;
         }
         
-        //setImagePreview(URL.createObjectURL(e.target.files[0]));
+        
         const formData = new FormData();
         formData.append('userImage', e.target.files[0]);
         const res = await axios.post(BASE_URL + "profile/picture", formData,
         {           
             withCredentials: true
         });
-        //console.log("File upload response ", res.data.data);
-        //setUploadedFile(e.target.files[0]);
-        //console.log(imagePreview);
+        
+        setPreviewPicture(res.data.data.pictureUrl);
         dispatch(addPicture(res.data.data.pictureUrl));
 
     }
@@ -151,7 +165,7 @@ const EditProfile = ({user}) => {
             </div>
             
             <div className="card">
-                <FeedCard user={{firstName, lastName, age, skills, gender, phone, about, picture:userPictureUrl}} />
+                <FeedCard user={{firstName, lastName, age, skills, gender, phone, about, pictureUrl:previewPicture? previewPicture : userPictureUrl}} />
                 <UploadPhoto handleUserPicture={handleUserPicture} uploadedfile={userPictureUrl}/>
             </div>
         </div>
